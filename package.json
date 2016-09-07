@@ -23,6 +23,9 @@
     "standard": "^8.0.0"
   },
   "dependencies": {
+    "flat": "^2.0.1",
+    "google-translate": "^1.0.6",
+    "highland": "^3.0.0-beta.2",
     "yargs": "^5.0.0"
   }
 }

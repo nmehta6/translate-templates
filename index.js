@@ -1,11 +1,12 @@
 var fs = require('fs')
-var highland = require('highland')
+var path = require('path')
+var _ = require('highland')
 var flatten = require('flat')
-var languages = require('../../config/translations')
 var magicWord = '777'
 
 function translate (options) {
-  var en = require(options.englishFile)
+  var en = require(path.join(__dirname, options.englishFile))
+  var locales = options.locales
 
   function replaceBindingsWithMagicCharacter (text) {
     if (typeof text !== 'string') {
@@ -16,7 +17,7 @@ function translate (options) {
 
   function replaceMagicCharsWithBindings (result) {
     var keyValues = flatten(en)
-    var values = highland.values(keyValues)
+    var values = _.values(keyValues)
 
     var originalText = values
       .find(v => replaceBindingsWithMagicCharacter(v) === result.originalText)
@@ -32,17 +33,17 @@ function translate (options) {
     return typeof str === 'string'
   }
 
-  // map the languages array to writable streams
+  // map the locales array to writable streams
   // streams are not being passed back to gulp since no other task is chaining
-  languages.map(language => {
+  locales.map(language => {
     var flattenedEnglishFile = flatten(en)
-    var englishKeys = highland.keys(flattenedEnglishFile)
-    var arrayOfEnglishText = highland.values(flattenedEnglishFile)
+    var englishKeys = _.keys(flattenedEnglishFile)
+    var arrayOfEnglishText = _.values(flattenedEnglishFile)
     var googleTranslate = require('google-translate')(options.apiKey)
 
     var translateToLanguage = (s, cb) => googleTranslate.translate(s, 'en', language, cb)
 
-    var translate = highland
+    var translate = _
       .wrapCallback(translateToLanguage)
 
     var translations = arrayOfEnglishText
@@ -55,11 +56,13 @@ function translate (options) {
 
     return englishKeys
       .zip(translations)
-      .reduce((x, y) => highland.set(y[0], y[1], x), {})
+      .reduce((x, y) => _.set(y[0], y[1], x), {})
       .map(flatten.unflatten)
       .map(s => JSON.stringify(s, null, 4))
       .pipe(fs.createWriteStream(`${options.outDir}/${language}.json`))
   })
 }
 
-module.exports = translate
+module.exports = (options) => {
+  translate(options)
+}
