@@ -19,7 +19,7 @@ translate(options)
 ```
 
 ### options (all required)
-`options.apiKey`: API key for Google Translate
-`options.outDir`: Directory where translations should go
-`options.englishFile`: Path to the English file to translate from
-`options.locales`: An array of locales to translate to. Use any locale accepted by Google Translate.
+- `options.apiKey`: API key for Google Translate
+- `options.outDir`: Directory where translations should go
+- `options.englishFile`: Path to the English file to translate from
+- `options.locales`: An array of locales to translate to. Use any locale accepted by Google Translate.
