@@ -50,8 +50,7 @@ function translate (options) {
       .filter(isString)
       .map(replaceBindingsWithMagicCharacter)
       .batch(10)
-      .map(translate)
-      .flatten()
+      .flatMap(translate)
       .flatMap(replaceMagicCharsWithBindings)
 
     return englishKeys
