@@ -1,0 +1,15 @@
+{
+	"asi": true,
+	"esnext": true,
+	"mocha": true,
+	"node": true,
+	"predef"   : [
+        /* MOCHA */
+        "describe"  ,
+        "it"        ,
+        "before"    ,
+        "beforeEach",
+        "after"     ,
+        "afterEach" 
+      ]
+}
